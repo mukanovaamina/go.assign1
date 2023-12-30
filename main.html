@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send message</title>
+    <style>
+        body{
+            background-color: rosybrown;
+        }
+    </style>
+</head>
+<body>
+    <h1>Message sending</h1>
+    <form id="messageForm">
+        <label for="message">Write message down:</label><br>
+        <input type="text" id="message" name="message"><br><br>
+        <input type="submit" value="Send">
+    </form>
+
+    <div id="response"></div>
+
+    <script>
+        document.getElementById('messageForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const message = document.getElementById('message').value;
+
+            fetch('http://localhost:8080/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('response').innerHTML = `<p>${JSON.stringify(data)}</p>`;
+                })
+                .catch(error => {
+                    console.error('Error', error);
+                    document.getElementById('response').innerHTML = '<p>Something happened wrong</p>';
+                });
+        });
+    </script>
+</body>
+</html>
